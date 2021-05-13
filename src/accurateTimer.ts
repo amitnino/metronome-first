@@ -1,4 +1,4 @@
-interface TimerInterface {
+export interface TimerInterface {
 
     /**
      * Function that runs once a round of an interval has finished.
@@ -20,8 +20,8 @@ interface TimerInterface {
 
 };
 
-class Timer {
-    
+export class Timer { 
+
     /**
      * Function that runs once a round of an interval has finished.
      * @type {function}
@@ -50,12 +50,13 @@ class Timer {
      * An Instance of the current round.
      * @type {Timeout}
      */
-    timeOut: ReturnType<typeof setTimeout>;
+    timeOutInstance: ReturnType<typeof setTimeout> | undefined;
 
-    constructor( callback: () => void | any, timeInterval: number, errorCallback: () => void | any ){
+    constructor( timeInterval: number, callback: () => void | any, errorCallback: () => void | any ){
         this.timeInterval = timeInterval;
         this.callback = callback;
         this.errorCallback = errorCallback;
+        this.expectedTime = 0;
     };
     
     /**
@@ -63,7 +64,7 @@ class Timer {
      */
     public start: () => void = (): void => {
         this.expectedTime = Date.now() + this.timeInterval;
-        this.timeOut = setTimeout(this.round, this.timeInterval);
+        this.timeOutInstance = setTimeout(this.round, this.timeInterval);
         console.log('Started!');  
     };
     
@@ -71,7 +72,7 @@ class Timer {
      * Method that stops the timer.
      */
     public stop: () => void = (): void=> {
-        clearTimeout(this.timeOut);
+        clearTimeout(this.timeOutInstance);
         console.log('Stopped');  
     };
     
@@ -89,11 +90,12 @@ class Timer {
         if (drift > this.timeInterval) {
             if (this.errorCallback){
                 this.errorCallback();
+                return;
             };
         };
 
         this.callback();
         this.expectedTime += this.timeInterval;
-        this.timeOut = setTimeout(this.round, this.timeInterval - drift );
+        this.timeOutInstance = setTimeout(this.round, this.timeInterval - drift );
     };
 };
