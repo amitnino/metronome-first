@@ -1,12 +1,12 @@
 // Imports
 
-import { Timer, TimerInterface } from './accurateTimer';
+import { Timer, TimerInterface } from './classes/accurateTimer.js';
 
 // DOM Elements
 
 import {
     tempoText
-} from './htmlElements';
+} from './htmlElements.js';
 
 // Variables
 
@@ -16,4 +16,3 @@ let bpm: Number = 140;
 /** @type {Number} */
 let beatsPerMeasure: Number = 4;
 
-tempoText.textContent = '159';
