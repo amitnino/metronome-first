@@ -1,6 +1,6 @@
 ;
 export class Timer {
-    constructor(timeInterval, callback, errorCallback) {
+    constructor({ timeInterval, callback, errorCallback }) {
         /**
          * Method that starts the timer.
          */

@@ -1,6 +1,11 @@
 export interface TimerInterface {
 
     /**
+     * The amount of miliseconds a round should be, entered by user.
+     * @type {number}
+     */
+    timeInterval: number;
+    /**
      * Function that runs once a round of an interval has finished.
      * @type {function}
      */
@@ -12,12 +17,6 @@ export interface TimerInterface {
       */
      errorCallback: () => void | any
  
-     /**
-      * The amount of miliseconds a round should be, entered by user.
-      * @type {number}
-      */
-     timeInterval: number;
-
 };
 
 export class Timer { 
@@ -38,7 +37,7 @@ export class Timer {
      * The amount of miliseconds a round should be, entered by user.
      * @type {number}
      */
-    timeInterval: number;
+    public timeInterval: number;
 
     /**
      * The expected milisecond Timeout instace should finish its count.
@@ -52,7 +51,7 @@ export class Timer {
      */
     timeOutInstance: ReturnType<typeof setTimeout> | undefined;
 
-    constructor( timeInterval: number, callback: () => void | any, errorCallback: () => void | any ){
+    constructor ( { timeInterval, callback, errorCallback }: TimerInterface ){
         this.timeInterval = timeInterval;
         this.callback = callback;
         this.errorCallback = errorCallback;

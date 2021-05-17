@@ -1,26 +1,26 @@
 /** @type {HTMLElement} */
-export const tempoDisplay = document.querySelector('.tempo')!;
+export const tempoDisplay: HTMLElement = document.querySelector('.tempo')!;
 
 /** @type {HTMLElement} */
-export const tempoText = document.querySelector('.tempo-text')!;
+export const tempoText: HTMLElement = document.querySelector('.tempo-text')!;
 
 /** @type {HTMLElement} */
-export const decreaseTempoBtn = document.querySelector('.decrease-tempo')!;
+export const decreaseTempoBtn: HTMLElement = document.querySelector('.decrease-tempo')!;
 
 /** @type {HTMLElement} */
-export const increaseTempoBtn = document.querySelector('.increase-tempo')!;
+export const increaseTempoBtn: HTMLElement = document.querySelector('.increase-tempo')!;
 
 /** @type {HTMLElement} */
-export const tempoSlider = document.querySelector('.slider')!;
+export const tempoSlider: HTMLElement = document.querySelector('.slider')!;
 
 /** @type {HTMLElement} */
-export const startStopBtn = document.querySelector('.start-stop')!;
+export const startStopBtn: HTMLElement = document.querySelector('.start-stop')!;
 
 /** @type {HTMLElement} */
-export const subtractBeats = document.querySelector('.subtract-beats')!;
+export const subtractBeats: HTMLElement = document.querySelector('.subtract-beats')!;
 
 /** @type {HTMLElement} */
-export const addBeats = document.querySelector('.add-beats')!;
+export const addBeats: HTMLElement = document.querySelector('.add-beats')!;
 
 /** @type {HTMLElement} */
-export const measureCount = document.querySelector('.measure-count')!;
+export const measureCount: HTMLElement = document.querySelector('.measure-count')!;
