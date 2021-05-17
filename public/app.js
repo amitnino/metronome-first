@@ -3,6 +3,8 @@ import { Timer } from './classes/accurateTimer.js';
 // DOM Elements
 import { addBeats, measureCount, startStopBtn, subtractBeats, tempoDisplay, tempoSlider, tempoText, } from './modules/htmlElements.js';
 // Variables
+const rootBeatAudio = new Audio('./sounds/click1.mp3');
+const subBeatAudio = new Audio('./sounds/click2.mp3');
 /**
  * Number of beats per minute.
  *  @type {number}
@@ -49,8 +51,9 @@ const setTimerInterval = () => {
  * @type {function}
  */
 const timerCallback = () => {
-    console.log(`Current Beat: ${beatsPerMeasure - currentBeat}`);
-    currentBeat = currentBeat ? currentBeat - 1 : beatsPerMeasure - 1;
+    console.log(`Current Beat: ${currentBeat}`);
+    currentBeat !== 1 ? subBeatAudio.play() : rootBeatAudio.play();
+    currentBeat = currentBeat === beatsPerMeasure ? 1 : currentBeat + 1;
 };
 /**
  * A callback function that executes if an error accured.
@@ -65,8 +68,9 @@ const timerErrorCallback = () => {
  */
 const toggleMetronome = () => {
     if (!metronomeIsRunning) {
-        currentBeat = beatsPerMeasure - 1;
+        currentBeat = 1;
         metronome.start();
+        rootBeatAudio.play();
         startStopBtn.innerHTML = 'STOP';
     }
     else {
@@ -131,14 +135,12 @@ startStopBtn.addEventListener('click', () => toggleMetronome());
  * @type {EventListener}
  */
 tempoSlider.addEventListener('input', () => {
-    if (metronomeIsRunning)
-        metronome.stop();
+    toggleMetronome();
     beatsPerMinute = parseInt(tempoSlider.value);
     tempoDisplay.innerHTML = tempoSlider.value;
     changeTempoNameDisplay();
     setTimerInterval();
-    if (metronomeIsRunning)
-        metronome.start();
+    toggleMetronome();
 });
 /**
  * Executes once subtract btn is clicked.
