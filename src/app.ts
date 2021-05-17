@@ -1,54 +1,41 @@
 // Imports
-
 import { Timer, TimerInterface } from './classes/accurateTimer.js';
-
 // DOM Elements
-
-import { 
+import {
     startStopBtn,
-    
-
-} from './htmlElements.js';
-
+} from './modules/htmlElements.js';
 // Variables
-
 /**
  * Number of beats per minute.
  *  @type {number}
  */
-let beatsPerMinute: number;
-
+let beatsPerMinute: number = 60;
 /** 
  * Number of beats per measure.
  * @type {number}
 */
-let beatsPerMeasure: number;
-
+let beatsPerMeasure: number = 4;
 /**
  * The amount of beats left until next measure.
  * @type {number}
 */
-let currentBeat: number;
-
+let currentBeat: number = 3;
 /**
  * The amount of miliseconds in netween each beat.
  * @type {number}
  */
-let timeInterval: number;
-
+let timeInterval: number = 250;
+/**
+ * Boolean maintaining the current state of the metronome.
+ * @type {boolean}
+ */
 let metronomeIsRunning: boolean = false;
-
+/**
+ * Instance of the Timer class
+ * @type {Timer}
+ */
 let metronome: Timer;
-
-// Global Functions
-
-interface timeIntervalInterface{
-    
-    beatsPerMinute: number;
-    beatsPerMeasure: number;
-    
-};
-
+// Functions
 /**
  * returns the amount of miliseconds between each beat.
  * Calculated with the formula: 
@@ -56,78 +43,51 @@ interface timeIntervalInterface{
  * @type {funcion}
  */
 const calculateMilliseconds = (): number => {
-
     return Math.floor(60000 / beatsPerMinute / beatsPerMeasure);
-
-}
-
-
-// Start / Stop Metronome Functions
+};
 /**
- * Creates a New Timer instance and starts the metronome.
+ * A callback function that executes each time a time interval has ended.
+ * (Executes every beat)
  * @type {function}
  */
-const startMetronome: () => void = (): void => {
-    
-    /**
-     * A callback function that executes each time a time interval has ended.
-     * (Executes every beat)
-     * @type {function}
-     */
-    const beatCounter: () => void = () : void => {
-        
-        
-        console.log(`Current Beat: ${ beatsPerMeasure - currentBeat}`);
-        
-        currentBeat = currentBeat ? currentBeat - 1 : beatsPerMeasure - 1;
-
+const timerCallback: () => void = (): void => {
+    console.log(`Current Beat: ${beatsPerMeasure - currentBeat}`);
+    currentBeat = currentBeat ? currentBeat - 1 : beatsPerMeasure - 1;
+};
+/**
+ * A callback function that executes if an error accured.
+ * @type {function}
+ */
+const timerErrorCallback: () => void = (): void => {
+    console.log('Error has accurd, timer is paused');
+};
+/**
+ * Toggles metronome state causing it to start or stop.
+ * @type {function}
+ */
+const toggleMetronome: () => void = (): void => {
+    if (!metronomeIsRunning){
+        metronome.start();
+        startStopBtn.innerHTML = 'STOP';    
+    }else{
+        metronome.stop();
+        startStopBtn.innerHTML = 'START';
     };
-    
-    /**
-     * A callback function that executes if an error accured.
-     * @type {function}
-     */
-    const errorCallback: () => void = () : void => {
-        
-        console.log('Error has accurd, timer is paused');
-        
-    };
-
-    timeInterval = calculateMilliseconds();
-    
+    metronomeIsRunning = !metronomeIsRunning;
+};
+// On DOM Load
+window.addEventListener('load',()=>{    
     const timerProps: TimerInterface = {
         timeInterval,
-        callback: beatCounter,
-        errorCallback: errorCallback
+        callback: timerCallback,
+        errorCallback: timerErrorCallback
     };
-    
     metronome = new Timer(timerProps);
-
-    metronome.start();
-
-    metronomeIsRunning = true;
-
-    startStopBtn.innerHTML = 'STOP';
-    
-};
-
-const stopMetronome: ()=> void = (): void => {
-    
-    metronome.stop();
-
-    metronomeIsRunning = false;
-
-    startStopBtn.innerHTML = 'START';
-
-}
-
+})
+// Eventlisteners
 /**
  * Once startStopBtn is clicked, the startMetronome or stopMetronome function will execute.
  * using the metronomeIsRunning boolean.
  * @type {EventListener}
  */
-startStopBtn.addEventListener('click', ()=>{
-
-    metronomeIsRunning ? stopMetronome() : startMetronome();
-
-});
+startStopBtn.addEventListener('click', ()=>toggleMetronome());
