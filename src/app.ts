@@ -126,10 +126,12 @@ startStopBtn.addEventListener('click', ()=>toggleMetronome());
  * @type {EventListener}
  */
 tempoSlider.addEventListener('input', () => {
+    if (metronomeIsRunning) metronome.stop();
     beatsPerMinute = parseInt(tempoSlider.value);
     tempoDisplay.innerHTML = tempoSlider.value;
     changeTempoNameDisplay();
     setTimerInterval();
+    if (metronomeIsRunning) metronome.start();
 });
 /**
  * Executes once subtract btn is clicked.
