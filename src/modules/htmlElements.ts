@@ -11,7 +11,7 @@ export const decreaseTempoBtn: HTMLElement = document.querySelector('.decrease-t
 export const increaseTempoBtn: HTMLElement = document.querySelector('.increase-tempo')!;
 
 /** @type {HTMLElement} */
-export const tempoSlider: HTMLElement = document.querySelector('.slider')!;
+export const tempoSlider: HTMLInputElement = document.querySelector('.slider')!;
 
 /** @type {HTMLElement} */
 export const startStopBtn: HTMLElement = document.querySelector('.start-stop')!;

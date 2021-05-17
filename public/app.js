@@ -1,7 +1,7 @@
 // Imports
 import { Timer } from './classes/accurateTimer.js';
 // DOM Elements
-import { startStopBtn, } from './modules/htmlElements.js';
+import { addBeats, measureCount, startStopBtn, subtractBeats, tempoDisplay, tempoSlider, tempoText, } from './modules/htmlElements.js';
 // Variables
 /**
  * Number of beats per minute.
@@ -17,7 +17,7 @@ let beatsPerMeasure = 4;
  * The amount of beats left until next measure.
  * @type {number}
 */
-let currentBeat = 3;
+let currentBeat;
 /**
  * The amount of miliseconds in netween each beat.
  * @type {number}
@@ -40,8 +40,8 @@ let metronome;
  * 60,000 / Beats per minute / Beats per measure = Milliseconds
  * @type {funcion}
  */
-const calculateMilliseconds = () => {
-    return Math.floor(60000 / beatsPerMinute / beatsPerMeasure);
+const setTimerInterval = () => {
+    metronome.timeInterval = Math.floor(60000 / beatsPerMinute / beatsPerMeasure);
 };
 /**
  * A callback function that executes each time a time interval has ended.
@@ -65,6 +65,7 @@ const timerErrorCallback = () => {
  */
 const toggleMetronome = () => {
     if (!metronomeIsRunning) {
+        currentBeat = beatsPerMeasure - 1;
         metronome.start();
         startStopBtn.innerHTML = 'STOP';
     }
@@ -75,7 +76,42 @@ const toggleMetronome = () => {
     ;
     metronomeIsRunning = !metronomeIsRunning;
 };
-// On DOM Load
+/**
+ * Increases the amount of Beats per Measure by one.
+ * The value has to be between 3 to 9.
+ * @type {function}
+*/
+const changeBeatsPerMeasureValue = (increase) => {
+    if (increase) {
+        if (beatsPerMeasure >= 9)
+            return;
+        beatsPerMeasure += 1;
+    }
+    else {
+        if (beatsPerMeasure <= 3)
+            return;
+        beatsPerMeasure -= 1;
+    }
+    ;
+    measureCount.innerHTML = `${beatsPerMeasure}`;
+    setTimerInterval();
+};
+const changeTempoNameDisplay = () => {
+    let text = '';
+    if (beatsPerMinute <= 50)
+        text = 'SLOW';
+    if (beatsPerMinute >= 51 && beatsPerMinute <= 65)
+        text = 'MODERATE';
+    if (beatsPerMinute >= 66 && beatsPerMinute <= 80)
+        text = 'FAST';
+    if (beatsPerMinute >= 81)
+        text = 'SONIC';
+    tempoText.innerHTML = text;
+};
+// Eventlisteners
+/**
+ * Once DOM has loaded, a Timer class instance will be initiated.
+ */
 window.addEventListener('load', () => {
     const timerProps = {
         timeInterval,
@@ -84,10 +120,31 @@ window.addEventListener('load', () => {
     };
     metronome = new Timer(timerProps);
 });
-// Eventlisteners
 /**
  * Once startStopBtn is clicked, the startMetronome or stopMetronome function will execute.
  * using the metronomeIsRunning boolean.
  * @type {EventListener}
  */
 startStopBtn.addEventListener('click', () => toggleMetronome());
+/**
+ * Executes once slider is moved and changes the value of the range input.
+ * @type {EventListener}
+ */
+tempoSlider.addEventListener('input', () => {
+    beatsPerMinute = parseInt(tempoSlider.value);
+    tempoDisplay.innerHTML = tempoSlider.value;
+    changeTempoNameDisplay();
+    setTimerInterval();
+});
+/**
+ * Executes once subtract btn is clicked.
+ * Decreases the amount of Beats per Measure by one
+ * @type {EventListener}
+ */
+subtractBeats.addEventListener('click', () => changeBeatsPerMeasureValue(false));
+/**
+ * Executes once add btn is clicked.
+ * Increases the amount of Beats per Measure by one
+ * @type {EventListener}
+ */
+addBeats.addEventListener('click', () => changeBeatsPerMeasureValue(true));
